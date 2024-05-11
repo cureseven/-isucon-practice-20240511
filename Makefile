@@ -1,4 +1,4 @@
-.PHONY: init
+.PHONY: init start stop create
 init: webapp/sql/dump.sql.bz2 benchmarker/userdata/img
 
 webapp/sql/dump.sql.bz2:
@@ -12,3 +12,17 @@ benchmarker/userdata/img.zip:
 benchmarker/userdata/img: benchmarker/userdata/img.zip
 	cd benchmarker/userdata && \
 	unzip -qq -o img.zip
+
+create:
+	cd webapp/golang && make all
+
+stop:
+	sudo systemctl stop nginx
+	sudo systemctl stop isu-go
+	sudo systemctl stop mysql
+
+start:
+	sudo systemctl start mysql
+	sleep 5
+	sudo systemctl start isu-go
+	sudo systemctl start nginx
